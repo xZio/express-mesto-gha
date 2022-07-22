@@ -1,5 +1,5 @@
 const User = require('../models/user');
-const { BAD_REQUEST, NOT_FOUND, INTERNAL_SERVER_ERROR } = require('./errors');
+const { BAD_REQUEST, NOT_FOUND, INTERNAL_SERVER_ERROR } = require('../utils/errors');
 
 module.exports.getUsers = (req, res) => {
   User.find({})
@@ -41,7 +41,7 @@ module.exports.createUser = (req, res) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         res.status(BAD_REQUEST).send({
-          message: 'Переданы некорректные данные при создании пользователя',
+          message: err.message,
         });
         return;
       }
@@ -69,7 +69,7 @@ module.exports.updateProfile = (req, res) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         res.status(BAD_REQUEST).send({
-          message: 'Переданы некорректные данные при создании пользователя',
+          message: err.message,
         });
         return;
       }
@@ -97,7 +97,7 @@ module.exports.updateAvatar = (req, res) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         res.status(BAD_REQUEST).send({
-          message: 'Переданы некорректные данные при создании пользователя',
+          message: err.message,
         });
         return;
       }
