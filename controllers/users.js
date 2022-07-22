@@ -23,9 +23,15 @@ module.exports.getUser = (req, res) => {
 
       res.send({ data: user });
     })
-    .catch(() => res
-      .status(INTERNAL_SERVER_ERROR)
-      .send({ message: 'На сервере произошла ошибка' }));
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        res.status(BAD_REQUEST).send({ message: 'Переданы некорректные данные при получении пользователя' });
+        return;
+      }
+      res
+        .status(INTERNAL_SERVER_ERROR)
+        .send({ message: 'На сервере произошла ошибка' });
+    });
 };
 
 module.exports.createUser = (req, res) => {
@@ -49,7 +55,7 @@ module.exports.createUser = (req, res) => {
 module.exports.updateProfile = (req, res) => {
   const ownerId = req.user._id;
   const { name, about } = req.body;
-  User.findByIdAndUpdate(ownerId, { name, about }, { new: true })
+  User.findByIdAndUpdate(ownerId, { name, about }, { new: true, runValidators: true })
     .then((user) => {
       if (!user) {
         res.status(NOT_FOUND).send({
@@ -77,7 +83,7 @@ module.exports.updateProfile = (req, res) => {
 module.exports.updateAvatar = (req, res) => {
   const ownerId = req.user._id;
   const { avatar } = req.body;
-  User.findByIdAndUpdate(ownerId, { avatar }, { new: true })
+  User.findByIdAndUpdate(ownerId, { avatar }, { new: true, runValidators: true })
     .then((user) => {
       if (!user) {
         res.status(NOT_FOUND).send({
