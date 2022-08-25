@@ -115,3 +115,15 @@ module.exports.login = (req, res, next) => {
     })
     .catch(next);
 };
+
+module.exports.getCurrentUser = (req, res, next) => {
+  const ownerId = req.user._id;
+  User.findById(ownerId)
+    .then((user) => {
+      if (!user) {
+        throw new NotFoundError('Пользователь не найден');
+      }
+      res.send({ user });
+    })
+    .catch(next);
+};
