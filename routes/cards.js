@@ -8,6 +8,8 @@ const {
   dislikeCard,
 } = require('../controllers/cards');
 
+const urlRegExp = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,}\.[a-zA-Z0-9()]{1,}\b([-a-zA-Z0-9()@:%_+.~#?&/=]*)/;
+
 router.get('/', getCards);
 
 router.post(
@@ -17,7 +19,7 @@ router.post(
       name: Joi.string().required().min(2).max(30),
       link: Joi.string()
         .required()
-        .pattern(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,}\.[a-zA-Z0-9()]{1,}\b([-a-zA-Z0-9()@:%_+.~#?&/=]*)/),
+        .pattern(urlRegExp),
     }),
   }),
   createCard,

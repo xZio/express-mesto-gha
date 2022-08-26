@@ -2,12 +2,11 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const { celebrate, Joi, errors } = require('celebrate');
-const helmet = require('helmet');
+
 const { login, createUser } = require('./controllers/users');
 const auth = require('./middlewares/auth');
 const validationErrors = require('./middlewares/errors');
 const NotFoundError = require('./utils/not-found-error');
-const regExp = require('./routes/users');
 
 const { PORT = 3000 } = process.env;
 
@@ -17,7 +16,6 @@ mongoose.connect('mongodb://localhost:27017/mestodb');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(helmet());
 
 app.post('/signin', celebrate({
   body: Joi.object().keys({
@@ -29,7 +27,7 @@ app.post('/signup', celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30),
     about: Joi.string().min(2).max(30),
-    avatar: Joi.string().pattern(regExp),
+    avatar: Joi.string().pattern(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,}\.[a-zA-Z0-9()]{1,}\b([-a-zA-Z0-9()@:%_+.~#?&/=]*)/),
     email: Joi.string().required().email(),
     password: Joi.string().required(),
   }),

@@ -8,8 +8,6 @@ const {
   updateAvatar,
 } = require('../controllers/users');
 
-const regExp = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,}\.[a-zA-Z0-9()]{1,}\b([-a-zA-Z0-9()@:%_+.~#?&/=]*)/;
-
 router.get('/', getUsers);
 router.get('/me', getCurrentUser);
 router.get('/:userId', celebrate({
@@ -29,7 +27,7 @@ router.patch('/me/avatar', celebrate({
   body: Joi.object().keys({
     avatar: Joi.string()
       .required()
-      .pattern(regExp),
+      .pattern(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,}\.[a-zA-Z0-9()]{1,}\b([-a-zA-Z0-9()@:%_+.~#?&/=]*)/),
   }),
 }), updateAvatar);
 module.exports = router;
